@@ -1,0 +1,17 @@
+# macOS
+.DS_Store
+
+# never commit your secrets
+.env
+
+# python
+__pycache__/
+*.pyc
+.venv/
+venv/
+
+# the raw ARLIS dump can be big — keep it out of git
+data/arlis_docs.jsonl.xz
+
+# streamlit cache
+.streamlit/secrets.toml

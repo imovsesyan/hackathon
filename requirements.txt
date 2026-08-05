@@ -1,0 +1,11 @@
+# Օրենքը պարզ բառերով — dependencies
+streamlit>=1.36
+groq>=0.11
+python-dotenv>=1.0
+
+# Optional — only needed if you also want to use Google Gemini
+# google-genai>=1.0
+
+# Only used by prepare_data.py (reading the ARLIS dump). Standard lib lzma/json
+# already handle most of it; pandas is handy for inspection.
+pandas>=2.0
