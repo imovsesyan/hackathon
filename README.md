@@ -1,22 +1,19 @@
-# ⚖️ Օրենքը պարզ բառերով — "Explain Like I'm 15" Law Summarizer
-
-Հայկական օրենքի ցանկացած հոդված՝ ցուցադրված **կողք կողքի**՝ ձախում բնօրինակը,
-աջում պարզ, մարդկային հայերեն բացատրությունը (+ առօրյա օրինակ և քվիզ):
+# ⚖️ Law in Plain Words — "Explain Like I'm 15" Law Summarizer
 
 Takes any ARLIS legal article and shows a plain-Armenian explanation side by
 side with the original. Built with **Streamlit + Groq**.
 
 ---
 
-## 🚀 Արագ մեկնարկ (5 քայլ)
+## 🚀 Quick Start (5 steps)
 
-Ամեն ինչ արվում է VS Code-ի ներսում՝ **Terminal → New Terminal** (⌃`).
+Everything runs inside VS Code: **Terminal → New Terminal** (⌃`).
 
-### 1. Տեղադրիր փաթեթները
+### 1. Install dependencies
 
 ```bash
 python -m venv .venv
-# mac/Linux:
+# macOS/Linux:
 source .venv/bin/activate
 # Windows:
 .venv\Scripts\activate
@@ -24,97 +21,77 @@ source .venv/bin/activate
 pip install -r requirements.txt
 ```
 
-### 2. Ստեղծիր `.env` ֆայլը քո բանալիով
+### 2. Create your `.env` file
 
-Գրանցվիր՝ https://console.groq.com/ → **API Keys** → ստեղծիր բանալի (անվճար է):
+Sign up at https://console.groq.com/ → **API Keys** → create a key (it's free).
 
 ```bash
 cp .env.example .env      # Windows: copy .env.example .env
 ```
 
-Բացիր `.env`-ը և տեղադրիր բանալին.
+Open `.env` and paste your key:
 
 ```
-GROQ_API_KEY=gsk_...քո_բանալին...
+GROQ_API_KEY=gsk_...your_key...
 GROQ_MODEL=openai/gpt-oss-120b
 ```
 
-### 3. Ստուգիր, որ բանալին աշխատում է
+### 3. Verify your key works
 
 ```bash
 python check_models.py
 ```
 
-Կտպի քո account-ի հասանելի մոդելները: Ընտրիր մեկը և դիր `.env`-ի `GROQ_MODEL`-ում:
-> ⚠️ 2026-ի կեսերին հին `llama-3.3-70b-versatile`-ը հանվել է Groq-ից: Օգտագործիր
-> `openai/gpt-oss-120b` կամ `qwen/qwen3.6-27b`, կամ այն, ինչ ցույց է տալիս սկրիպտը:
+This prints all models available on your account. Pick one and set it as `GROQ_MODEL` in `.env`.
+> ⚠️ As of mid-2026, `llama-3.3-70b-versatile` has been removed from Groq. Use
+> `openai/gpt-oss-120b`, `qwen/qwen3.6-27b`, or whatever the script shows.
 
-### 4. Զապուսկ արա հավելվածը
+### 4. Run the app
 
 ```bash
 streamlit run app.py
 ```
 
-Բացվում է բրաուզերում (սովորաբար http://localhost:8501): Ընտրիր օրենք → հոդված →
-սեղմիր **«Բացատրիր պարզ հայերենով»**: 🎉
+Opens in your browser (usually http://localhost:8501). Pick a law → pick an article →
+click **"Explain in plain Armenian"**. 🎉
 
-Հավելվածը **անմիջապես աշխատում է** նմուշային տվյալներով (3 օրենք, `data/laws.json`):
-Իրական ARLIS տվյալների համար՝ տես ստորև:
+The app works immediately with sample data (3 laws in `data/laws.json`).
+For real ARLIS data, see step 5.
 
-### 5. (Ընտրովի) Բեռնիր իրական ARLIS տվյալները
+### 5. (Optional) Load real ARLIS data
 
-1. Ներբեռնիր dump-ը՝ https://data.opendata.am/dataset/arlis-db
-2. Դիր `arlis_docs.jsonl.xz` ֆայլը `data/` պանակում:
-3. Զապուսկ արա.
+1. Download the dump from https://data.opendata.am/dataset/arlis-db
+2. Put `arlis_docs.jsonl.xz` in the `data/` folder.
+3. Run:
 
 ```bash
 python prepare_data.py
 ```
 
-Սա կկարդա dump-ը, կընտրի բարձր ազդեցության օրենքները (Աշխատանքային, Քաղաքացիական,
-Սպառողների...), կբաժանի յուրաքանչյուրը «Հոդված N» կտորների և կվերագրի `data/laws.json`:
-Հետո նորից `streamlit run app.py`:
+This reads the dump, picks high-impact laws (Labor, Civil, Consumer...), splits each into
+"Article N" chunks, and writes them to `data/laws.json`. Then run `streamlit run app.py` again.
 
 ---
 
-## 🗂️ Ինչ կա նախագծում
+## 🗂️ Project structure
 
-| Ֆայլ | Ինչի համար է |
-|------|-------------|
-| `app.py` | Streamlit UI — կողք-կողքի բնօրինակ vs պարզ բացատրություն |
-| `llm.py` | Groq կանչերը + հայերեն promptերը (explain / example / quiz) |
-| `prepare_data.py` | ARLIS dump → `data/laws.json` (իրական տվյալ) |
-| `data/laws.json` | Օրենքների պահոց (սկզբում՝ նմուշային) |
-| `check_models.py` | Ցույց է տալիս, թե որ մոդելներն են հասանելի քո բանալիով |
-| `.env` | Քո գաղտնի բանալիները (git-ում չի պահվում) |
+| File | Purpose |
+|------|---------|
+| `app.py` | Streamlit UI — original vs plain-language explanation side by side |
+| `llm.py` | Groq calls + Armenian prompts (explain / example / quiz) |
+| `prepare_data.py` | ARLIS dump → `data/laws.json` |
+| `data/laws.json` | Law storage (sample data by default) |
+| `check_models.py` | Lists models available on your API key |
+| `.env` | Your secret keys (never committed to git) |
 
-Ճարտարապետությունը միտումնավոր պարզ է՝ **ոչ vector DB, ոչ retrieval** — պարզապես
-JSON պահոց + մեկ prompt template: Դա հենց այն է, ինչ պետք է հաքաթոնի համար:
-
----
-
-## 🎤 Դեմո խորհուրդ (30 վայրկյան)
-
-1. Բացիր որևէ խիտ, դժվար հոդված (օր. Քաղաքացիական օրենսգիրք 606):
-2. Ասա ժյուրիին. «Ահա, ինչ է կարդում սովորական քաղաքացին»:
-3. Սեղմիր կոճակը → աջում հայտնվում է պարզ բացատրությունը + «Օրինակ՝ դու վարձով
-   բնակարան ես վերցնում և...»:
-4. Framing. *հասանելիություն արդարադատությանը և իրավական գրագիտություն Հայաստանում:*
+The architecture is intentionally simple: **no vector DB, no retrieval** — just a JSON
+store and a single prompt template. That's all a hackathon needs.
 
 ---
 
-## 🧩 Եթե շուտ ավարտեք — ընդլայնումներ
+## ❓ Troubleshooting
 
-- **Voice readout** — բացատրությունը կարդալ բարձրաձայն (browser speech API):
-- **Compare mode** — երկու հոդված կողք-կողքի:
-- **Search** — որոնում բոլոր հոդվածների մեջ:
-- **История** — պահել դիտված հոդվածները:
-
----
-
-## ❓ Հաճախ հանդիպող խնդիրներ
-
-- **`GROQ_API_KEY բացակայում է`** → `.env` ֆայլ չկա կամ բանալին դատարկ է:
-- **`model not found` / 404** → `python check_models.py` և թարմացրու `GROQ_MODEL`-ը:
-- **Հայերենը վատ է բացատրվում** → փորձիր ավելի մեծ մոդել (`openai/gpt-oss-120b`):
-- **`streamlit: command not found`** → չես ակտիվացրել `.venv`-ը (տես քայլ 1):
+- **`GROQ_API_KEY missing`** → `.env` file doesn't exist or the key is empty.
+- **`model not found` / 404** → run `python check_models.py` and update `GROQ_MODEL`.
+- **Poor Armenian output** → try a larger model (`openai/gpt-oss-120b`).
+- **`streamlit: command not found`** → you haven't activated `.venv` (see step 1).
